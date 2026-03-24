@@ -1,7 +1,21 @@
-import { users } from "../models/user.model";
+import { users } from "../models/user.model.js";
 
 export const getAllUser = (req, res) => {
-  return res.json(users);
+    let filteredUsers= users
+    if(req.query.role){
+        filteredUsers = users.filter((u) => {
+            return u.role === query.role 
+        })
+        
+    }
+    if(req.query.age){
+        filteredUsers = users.filter((u) => {
+            return u.age >= req.query.age
+        })
+    }
+
+
+return res.json(filteredUsers);
 };
 
 export const getUserById = (req, res) => {
