@@ -1,9 +1,10 @@
 import express from "express";
 import * as StockController from "../controllers/stock.controller.js";
+import { stockMiddleware } from "../middleware/index.js";
 
 const StockRouter = express.Router();
 
-StockRouter.get("/", StockController.getAllStock);
+StockRouter.get("/",stockMiddleware ,StockController.getAllStock);
 StockRouter.get("/:id", StockController.getStockById);
 StockRouter.post("/", StockController.CreateStock);
 StockRouter.patch("/:id", StockController.UpdateStock);

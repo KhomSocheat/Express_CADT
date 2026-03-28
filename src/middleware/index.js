@@ -7,3 +7,20 @@ export function teacherMiddleware(req, res, next) {
     }
     next();
 }
+
+
+export function stockMiddleware(req, res, next) {
+    if(req.query.minQuantity){
+        const minQuantity = parseInt(req.query.minQuantity);
+        if(isNaN(minQuantity) || minQuantity < 0){
+            return res.status(400).json({message: "minQuantity must be a positive number"})
+        }
+    }
+    if(req.query.maxQuantity){
+        const maxQuantity = parseInt(req.query.maxQuantity);
+        if(isNaN(maxQuantity) || maxQuantity < 0){
+            return res.status(400).json({message: "maxQuantity must be a positive number"})
+        }
+    }
+    next();
+}
