@@ -15,7 +15,7 @@ export const getAllStock = (req, res) => {
 		});
 	}
 
-return res.json(filteredStock);
+		return res.json(filteredStock);
 };
 
 export const getStockById = (req, res) => {
