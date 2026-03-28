@@ -1,7 +1,21 @@
 import { stock } from "../models/stock.model.js";
 
 export const getAllStock = (req, res) => {
-	return res.json(stock);
+	let filteredStock = stock;
+
+	if (req.query.maxQuantity) {
+		filteredStock = filteredStock.filter((s) => {
+			return s.quantity <= Number(req.query.maxQuantity);
+		});
+	}
+
+	if (req.query.minQuantity) {
+		filteredStock = filteredStock.filter((s) => {
+			return s.quantity >= Number(req.query.minQuantity);
+		});
+	}
+
+return res.json(filteredStock);
 };
 
 export const getStockById = (req, res) => {
