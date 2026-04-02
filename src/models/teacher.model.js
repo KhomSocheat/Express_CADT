@@ -1,5 +1,21 @@
-export const teachers = [
-    { id: 1, name: 'Mr. Smith', subject: 'Math' ,yearsOfExperience: 10},
-    { id: 2, name: 'Ms. Johnson', subject: 'English' ,yearsOfExperience: 5},
-    { id: 3, name: 'Mrs. Brown', subject: 'Science' ,yearsOfExperience: 15}
-]
+import mongoose from "mongoose";
+
+const teacherSchema = new mongoose.Schema({
+    name: {
+        type : String,
+        require: true
+    },
+    subject: {
+        type : String,
+        require: true
+    },
+    yearsOfExperience: {
+        type : Number,
+        require : true
+    }
+
+})
+
+    const teacherModel = mongoose.model("Teacher", teacherSchema);
+
+export default teacherModel;

@@ -45,8 +45,14 @@ export const CreateUser = async (req, res) => {
 
 };
 export const DeleteUser = async (req, res) => {
-    const id = req.params.id;
-    const deleteUser = await userModel.deleteOne({ _id : id});
 
-    return res.status(201).json({message: deleteUser });
+    try{
+
+        const id = req.params.id;
+        const deleteUser = await userModel.deleteOne({ _id : id});
+    
+        return res.status(201).json({message: deleteUser });
+    }catch(err){
+        return res.status(404).json({message: err})
+    }
 };
