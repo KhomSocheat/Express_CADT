@@ -10,10 +10,11 @@ export function teacherMiddleware(req, res, next) {
 
 
 export function stockMiddleware(req, res, next) {
+    const errors = [];
     if(req.query.minQuantity){
         const minQuantity = parseInt(req.query.minQuantity);
         if(isNaN(minQuantity) || minQuantity < 0){
-            return res.status(400).json({message: "minQuantity must be a positive number"})
+           errors.push({error : ''});
         }
     }
     if(req.query.maxQuantity){
@@ -21,6 +22,9 @@ export function stockMiddleware(req, res, next) {
         if(isNaN(maxQuantity) || maxQuantity < 0){
             return res.status(400).json({message: "maxQuantity must be a positive number"})
         }
+    }
+    if(errors.length > 0){
+        return res.status(400).json({errors});
     }
     next();
 }

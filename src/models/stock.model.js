@@ -1,5 +1,18 @@
-export const stock = [
-    {id : 1, name: "Apple", price: 150, quantity: 100},
-    {id : 2, name: "Google", price: 2800, quantity: 50},
-    {id : 3, name: "Amazon", price: 3500, quantity: 30}
-]
+import mongoose from "mongoose";
+
+const stockSchema = new mongoose.Schema({
+    name: {
+        type : String,
+
+    },
+    quantity: {
+        type : Number,
+    },
+    price: {
+        type : Number,
+    }
+})
+
+const stockModel = mongoose.model("Stock", stockSchema);
+
+export default stockModel;

@@ -7,6 +7,10 @@
 
 A simple learning project that exposes in‑memory REST APIs for **users** and **teachers** using **Node.js**, **Express 5**, and **ES Modules**.
 
+## Command to create mongodb on docker
+```bash
+docker run -d -p 27017:27017 --name=mongo-example mongo:latest
+
 ## Features
 
 - Express.js HTTP server running on port `3000`

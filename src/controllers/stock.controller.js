@@ -1,7 +1,17 @@
-import { stock } from "../models/stock.model.js";
+import stockModel from "../models/stock.model.js";
 
-export const getAllStock = (req, res) => {
-	let filteredStock = stock;
+export const CreateStock = async (req, res) => {
+	try {
+		const stock = new stockModel(req.body);
+		await stock.save();
+		return res.status(201).json(stock);
+	} catch (error) {
+		return res.status(400).json({ message: error.message });
+	}
+};
+
+export const getAllStock = async (req, res) => {
+	let filteredStock = await stockModel.find();
 
 	if (req.query.maxQuantity) {
 		filteredStock = filteredStock.filter((s) => {
@@ -18,49 +28,38 @@ export const getAllStock = (req, res) => {
 		return res.json(filteredStock);
 };
 
-export const getStockById = (req, res) => {
+export const getStockById = async (req, res) => {
 	const id = parseInt(req.params.id);
-	const item = stock.find((s) => {
-		return s.id === id;
-	});
+	const item = await stockModel.findById(id);
 	if (!item) {
 		return res.status(404).json({ message: "Not Found" });
 	}
 	return res.json(item);
 };
 
-export const UpdateStock = (req, res) => {
-	const stockId = req.params.id;
-	const stockIndex = stock.findIndex((s) => {
-		return stockId == s.id;
-	});
-
-	if (stockIndex === -1) {
-		return res.status(404).json({ message: "Not Found" });
+export const UpdateStock = async (req, res) => {
+	try{
+		const stockId = req.params.id;
+		const item = await stockModel.findByIdAndUpdate(stockId, req.body, { new: true });
+		return res.status(200).json({ message: `Stock with id ${stockId} updated`, item });
 	}
+	catch(error){
+		return res.status(400).json({ message: error.message });
+	}
+		
 
-	stock[stockIndex] = { id: parseInt(stockId), ...req.body };
-	return res.json({ message: `Stock with id ${stockId} updated` });
+
 };
 
-export const CreateStock = (req, res) => {
-	stock.push(req.body);
-	return res
-		.status(201)
-		.json({ message: `Stock with name ${req.body.name} created` });
-};
 
-export const DeleteStock = (req, res) => {
-	const id = parseInt(req.params.id);
-	const deleteIndex = stock.findIndex((s) => {
-		return s.id === id;
-	});
-
-	if (deleteIndex === -1) {
-		return res.status(404).json({ message: "Not Found" });
+export const DeleteStock = async (req, res) => {
+	try{
+		const stockId = req.params.id;
+		const detele = await stockModel.findByIdAndDelete(stockId);
+		return res.json({ message: `Stock with id ${stockId} deleted` });
 	}
-
-	stock.splice(deleteIndex, 1);
-	return res.json({ message: `Stock with id ${id} deleted` });
+	catch(error){
+		return res.status(400).json({ message: error.message });
+	}
 };
 
