@@ -1,7 +1,7 @@
-import { users } from "../models/user.model.js";
+import  userModel from "../models/user.model.js";
 
-export const getAllUser = (req, res) => {
-    let filteredUsers= users
+export const getAllUser = async (req, res) => {
+    let filteredUsers = await userModel.find()
     if(req.query.role){
         filteredUsers = users.filter((u) => {
             return u.role === query.role 
@@ -13,43 +13,40 @@ export const getAllUser = (req, res) => {
             return u.age >= req.query.age
         })
     }
-
-
-return res.json(filteredUsers);
+    return res.json(filteredUsers);
 };
 
-export const getUserById = (req, res) => {
+export const getUserById = async (req, res) => {
   const id = parseInt(req.params.id);
-    const user = users.find((u) => {
-        return u.id ===  id
-    });
+  const user = await userModel.findById(id);
     if(!user){
         return res.status(404).json({message: "Not Found"});
     }
     return res.json(user)
 };
-export const UpdateUser = (req, res) => {
+export const UpdateUser = async (req, res) => {
     const userId = req.params.id;
-    const userIndex = users.findIndex((u) => {
-        return userId == u.id
-    })
-    users[userIndex] = {id: userId,...req.body}
-    return res.json(({message: `User with id  ${userId} updated`}))
+    const updateUser = await userModel.updateOne({_id: userId} , req.body);
+    return res.json({
+    message: `User with id ${userId} updated`,
+    data: updateUser
+});
 };
 
-export const CreateUser = (req, res) => {
-     users.push(req.body)
+export const CreateUser = async (req, res) => {
+     try{
+        const user = new userModel(req.body);
+        await user.save();
+        return res.status(202).json(user)
+     }catch(error){
+        return res.status(400).json({ message: error.message });
+     }
     
-    return res.status(201).json({message : `Users with ${req.body.name} created`});
+
 };
-export const DeleteUser = (req, res) => {
-    const id = parseInt(req.params.id);
-    const deleteIndex = users.findIndex((u) => {
-        return u.id === id
-    })
-    if(deleteIndex === -1){
-        return res.status(404).json({message: "Not Found"})
-    }
-    users.splice(deleteIndex,1)
-    return res.json({message: `User with ${id} deleted`});
+export const DeleteUser = async (req, res) => {
+    const id = req.params.id;
+    const deleteUser = await userModel.deleteOne({ _id : id});
+
+    return res.status(201).json({message: deleteUser });
 };

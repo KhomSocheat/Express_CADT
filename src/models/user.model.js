@@ -1,27 +1,30 @@
-export const users = [
-    { id: 1, name: "Alice Smith", username: "alice", email: "alice@example.com", age: 22, role: "admin" },
-    { id: 2, name: "Bob Johnson", username: "bobj", email: "bob@example.com", age: 24, role: "admin" },
-    { id: 3, name: "Charlie Brown", username: "charlie", email: "charlie@example.com", age: 21, role: "admin" },
-    { id: 4, name: "David Lee", username: "dlee", email: "david@example.com", age: 23, role: "admin" },
-    { id: 5, name: "Eva Green", username: "eva", email: "eva@example.com", age: 20, role: "admin" },
-    { id: 6, name: "Frank Miller", username: "frankm", email: "frank@example.com", age: 25, role: "member" },
-    { id: 7, name: "Grace Kim", username: "gracek", email: "grace@example.com", age: 22, role: "member" },
-    { id: 8, name: "Henry Clark", username: "henryc", email: "henry@example.com", age: 23, role: "member" },
-    { id: 9, name: "Ivy Nguyen", username: "ivy", email: "ivy@example.com", age: 21, role: "member" },
-    { id: 10, name: "Jack Wilson", username: "jackw", email: "jack@example.com", age: 24, role: "member" },
-    { id: 11, name: "Karen Davis", username: "karen", email: "karen@example.com", age: 22, role: "member" },
-    { id: 12, name: "Leo Martin", username: "leom", email: "leo@example.com", age: 23, role: "member" },
-    { id: 13, name: "Mia Lopez", username: "mia", email: "mia@example.com", age: 20, role: "member" },
-    { id: 14, name: "Noah Scott", username: "noahs", email: "noah@example.com", age: 21, role: "member" },
-    { id: 15, name: "Olivia King", username: "olivia", email: "olivia@example.com", age: 22, role: "member" },
-    { id: 16, name: "Paul Adams", username: "paula", email: "paul@example.com", age: 24, role: "member" },
-    { id: 17, name: "Queen Baker", username: "queenb", email: "queen@example.com", age: 23, role: "member" },
-    { id: 18, name: "Ryan Evans", username: "ryane", email: "ryan@example.com", age: 25, role: "member" },
-    { id: 19, name: "Sophia Turner", username: "sophia", email: "sophia@example.com", age: 21, role: "member" },
-    { id: 20, name: "Tom Harris", username: "tomh", email: "tom@example.com", age: 22, role: "member" },
-    { id: 21, name: "Uma Patel", username: "uma", email: "uma@example.com", age: 23, role: "member" },
-    { id: 22, name: "Victor Zhang", username: "victor", email: "victor@example.com", age: 24, role: "member" },
-    { id: 23, name: "Wendy Park", username: "wendy", email: "wendy@example.com", age: 20, role: "member" },
-    { id: 24, name: "Xavier Reed", username: "xavier", email: "xavier@example.com", age: 21, role: "member" },
-    { id: 25, name: "Yara Costa", username: "yara", email: "yara@example.com", age: 22, role: "member" }
-];
+import mongoose from "mongoose";
+
+const userSchema = new mongoose.Schema({
+    name: {
+        type : String,
+        require: true
+    },
+    username :{
+        type : String,
+        require: true
+    },
+    age : {
+        type: Number,
+        require : true
+    },
+    email: {
+        type : String,
+        unique: true,
+        require: true
+    },
+    role: {
+
+        type : String,
+        require: true
+    }
+})
+
+    const userModel = mongoose.model("User", userSchema);
+
+export default userModel;
