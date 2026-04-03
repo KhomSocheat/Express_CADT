@@ -4,25 +4,58 @@
 
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=nodedotjs&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-5.x-000000?logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-6.x-47A248?logo=mongodb&logoColor=white)
+![Mongoose](https://img.shields.io/badge/Mongoose-9.x-880000)
+![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white)
 
-A simple learning project that exposes in‑memory REST APIs for **users** and **teachers** using **Node.js**, **Express 5**, and **ES Modules**.
+Simple learning project that exposes REST APIs for **users** and **teachers** using **Node.js**, **Express 5**, **MongoDB** (via Docker), and **ES Modules**.
 
-## Command to create mongodb on docker
+## Command to create MongoDB on Docker
+Use this command to start a MongoDB container that matches the connection URL in `src/database/db.js` (`mongodb://localhost:27017/idg-03`):
+
 ```bash
 docker run -d -p 27017:27017 --name=mongo-example mongo:latest
+```
 
 ## Features
 
 - Express.js HTTP server running on port `3000`
 - ES Module syntax (`import` / `export`)
-- In‑memory data models (no database)
+- MongoDB database using Mongoose ODM
 - CRUD operations for `User` and `Teacher` resources
+- Clean separation of **routes**, **controllers**, and **models**
 
 ## Tech Stack
 
 - Node.js (recommended v18+)
 - Express 5
+- MongoDB (via Docker container)
+- Mongoose (MongoDB ODM)
 - JavaScript (ES Modules)
+
+## Dependencies
+
+Runtime libraries (from package.json):
+
+- express
+- express-validator
+- mongoose
+
+Install them with:
+
+```bash
+npm install express express-validator mongoose
+```
+
+Dev dependency (used by the `dev` script):
+
+- nodemon
+
+Install it with:
+
+```bash
+npm install --save-dev nodemon
+```
 
 ## Project Structure
 
