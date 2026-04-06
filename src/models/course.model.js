@@ -14,7 +14,7 @@ const courseSchema = new mongoose.Schema({
         required : true
     }
 },{
-    timeseries : true
+    timestamps : true
 })
 
 const courseModel = mongoose.model("Course", courseSchema);

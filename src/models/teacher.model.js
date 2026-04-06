@@ -19,7 +19,7 @@ const teacherSchema = new mongoose.Schema({
     ]
 
 },{
-    timeseries : true
+    timestamps : true
 })
 
     const teacherModel = mongoose.model("Teacher", teacherSchema);
