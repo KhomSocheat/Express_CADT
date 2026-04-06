@@ -2,10 +2,12 @@ import express from 'express';
 import ApiRouter from './routes/api.route.js';
 import { dbConnect } from './database/db.js';
 import { handleError } from './middleware/index.js';
+import mogan from 'morgan'
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(mogan('combined'))
 
 app.use('/api', ApiRouter);
 
