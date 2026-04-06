@@ -1,5 +1,5 @@
 import teacherModel from "../models/teacher.model.js";
-
+import asyncHandler from 'express-async-handler'
 export const getAllTeachers = async (req, res) => {
     try {
         // Get all teachers with courses populated
@@ -59,12 +59,12 @@ export const UpdateTeacher = async (req, res) => {
 export const CreateTeacher = async (req, res) => {
     try {
         const teacher = new teacherModel(req.body);
-        await teacher.save();
 
+        await teacher.save();
         return res.status(200).json({
-        message: "Teacher save success",
-        data: teacher,
-    });
+          message: "Teacher save success",
+          data: teacher,
+        });
     } catch (error) {
          return res.status(500).json({
             message: "Error save teacher",

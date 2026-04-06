@@ -1,14 +1,11 @@
 import stockModel from "../models/stock.model.js";
+import asyncHandler from "express-async-handler"
+export const CreateStock = asyncHandler(async (req, res) => {
+    const stock = new stockModel(req.body);
+    await stock.save();
 
-export const CreateStock = async (req, res) => {
-	try {
-		const stock = new stockModel(req.body);
-		await stock.save();
-		return res.status(201).json(stock);
-	} catch (error) {
-		return res.status(400).json({ message: error.message });
-	}
-};
+    return res.status(201).json(stock);
+});
 
 export const getAllStock = async (req, res) => {
 	let filteredStock = await stockModel.find();
