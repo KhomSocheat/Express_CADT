@@ -32,8 +32,9 @@ export function stockMiddleware(req, res, next) {
 
 export function handleValidation(req,res,next){
     const result = validationResult(req);
-    if(result.isEmpty){
+    if(result.isEmpty()){
         next();
+        return;
     }
 
     res.status(400).send({errors: result.array()});

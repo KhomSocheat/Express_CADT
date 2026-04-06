@@ -1,18 +1,22 @@
 import mongoose from "mongoose";
+import courseModel from "./course.model.js";
 
 const teacherSchema = new mongoose.Schema({
     name: {
         type : String,
-        require: true
+        required: true
     },
     subject: {
         type : String,
-        require: true
+        required: true
     },
     yearsOfExperience: {
         type : Number,
-        require : true
-    }
+        required: true
+    },
+    courses:[
+        {type: mongoose.Types.ObjectId, ref: 'Course'}
+    ]
 
 })
 

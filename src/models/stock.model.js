@@ -10,6 +10,10 @@ const stockSchema = new mongoose.Schema({
     },
     price: {
         type : Number,
+    },
+    byUser: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User'
     }
 })
 

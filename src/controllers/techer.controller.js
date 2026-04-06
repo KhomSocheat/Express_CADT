@@ -1,19 +1,25 @@
 import teacherModel from "../models/teacher.model.js";
 
-export const getAllTeachers = (req, res) => {
-    let filteredTeachers = teacherModel;
-    if(req.query.subject){
-        filteredTeachers = teachers.filter((t) => {
-            return t.subject == req.query.subject
-        })
-    }
-    if(req.query.minYear){
-        filteredTeachers = teachers.filter((t) => {
-            return t.yearsOfExperience <= req.query.minYear
+export const getAllTeachers = async (req, res) => {
+    try {
+        // Get all teachers with courses populated
+        let filteredTeachers = await teacherModel.find().populate('courses');
+
+        // Filter by subject if query exists
+        if (req.query.subject) {
+            filteredTeachers = filteredTeachers.filter((t) => t.subject === req.query.subject);
         }
-        )
+
+        // Filter by minimum years of experience if query exists
+        if (req.query.minYear) {
+            const minYear = parseInt(req.query.minYear, 10);
+            filteredTeachers = filteredTeachers.filter((t) => t.yearsOfExperience >= minYear);
+        }
+
+        return res.json(filteredTeachers);
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
     }
-    return res.json(filteredTeachers);
 };
 
 export const getTeacherById = async (req, res) => {
@@ -57,7 +63,7 @@ export const CreateTeacher = async (req, res) => {
 
         return res.status(200).json({
         message: "Teacher save success",
-        data: updateTeacher,
+        data: teacher,
     });
     } catch (error) {
          return res.status(500).json({
