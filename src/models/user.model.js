@@ -23,6 +23,8 @@ const userSchema = new mongoose.Schema({
         type : String,
         required: true
     }
+},{
+    timeseries : true
 })
 
     const userModel = mongoose.model("User", userSchema);

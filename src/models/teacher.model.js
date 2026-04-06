@@ -18,6 +18,8 @@ const teacherSchema = new mongoose.Schema({
         {type: mongoose.Types.ObjectId, ref: 'Course'}
     ]
 
+},{
+    timeseries : true
 })
 
     const teacherModel = mongoose.model("Teacher", teacherSchema);

@@ -13,6 +13,8 @@ const courseSchema = new mongoose.Schema({
         type : String,
         required : true
     }
+},{
+    timeseries : true
 })
 
 const courseModel = mongoose.model("Course", courseSchema);

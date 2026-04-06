@@ -15,6 +15,8 @@ const stockSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'User'
     }
+},{
+    timeseries : true
 })
 
 const stockModel = mongoose.model("Stock", stockSchema);
