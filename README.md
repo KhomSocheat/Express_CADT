@@ -8,54 +8,45 @@
 ![Mongoose](https://img.shields.io/badge/Mongoose-9.x-880000)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white)
 
-Simple learning project that exposes REST APIs for **users** and **teachers** using **Node.js**, **Express 5**, **MongoDB** (via Docker), and **ES Modules**.
-
-## Command to create MongoDB on Docker
-Use this command to start a MongoDB container that matches the connection URL in `src/database/db.js` (`mongodb://localhost:27017/idg-03`):
-
-```bash
-docker run -d -p 27017:27017 --name=mongo-example mongo:latest
-```
+Learning project that exposes REST APIs using **Node.js**, **Express 5**, **MongoDB**, and **ES Modules**. It demonstrates the common **route → controller → model** architecture and basic CRUD endpoints.
 
 ## Features
 
-- Express.js HTTP server running on port `3000`
+- Express server on port `3000`
 - ES Module syntax (`import` / `export`)
-- MongoDB database using Mongoose ODM
-- CRUD operations for `User` and `Teacher` resources
-- Clean separation of **routes**, **controllers**, and **models**
+- MongoDB database connection via Mongoose
+- CRUD endpoints for multiple resources (users, teachers, books, etc.)
+- Clear separation of routes, controllers, and models
 
 ## Tech Stack
 
 - Node.js (recommended v18+)
 - Express 5
-- MongoDB (via Docker container)
-- Mongoose (MongoDB ODM)
+- MongoDB (Docker)
+- Mongoose
 - JavaScript (ES Modules)
 
-## Dependencies
+## Installed Packages (and why)
 
-Runtime libraries (from package.json):
+Runtime dependencies from [package.json](package.json):
 
-- express
-- express-validator
-- mongoose
+- **express**: HTTP server and routing
+   - Install: `npm install express`
+- **express-async-handler**: async controller error handling
+   - Install: `npm install express-async-handler`
+- **express-validator**: request validation helpers
+   - Install: `npm install express-validator`
+- **mongoose**: MongoDB ODM
+   - Install: `npm install mongoose`
+- **mongoose-paginate-v2**: Mongoose pagination plugin (installed, not yet used in code)
+   - Install: `npm install mongoose-paginate-v2`
 
-Install them with:
+Dev dependency:
 
-```bash
-npm install express express-validator mongoose
-```
-
-Dev dependency (used by the `dev` script):
-
-- nodemon
-
-Install it with:
-
-```bash
-npm install --save-dev nodemon
-```
+- **@faker-js/faker**: generate fake data for fixtures (see [src/fixture.js](src/fixture.js))
+   - Install: `npm install --save-dev @faker-js/faker`
+- **nodemon**: auto-restart server on file changes during development
+   - Install: `npm install --save-dev nodemon`
 
 ## Project Structure
 
@@ -64,57 +55,90 @@ npm install --save-dev nodemon
 ├─ package.json
 ├─ README.md
 └─ src/
-	 ├─ index.js          # App entry point (Express server)
-	 ├─ controllers/
-	 │  ├─ user.controller.js
-	 │  ├─ techer.controller.js
-	 │  ├─ book.controller.js
-	 │  ├─ money.controller.js
-	 │  └─ stock.controller.js
-	 ├─ models/
-	 │  ├─ user.model.js
-	 │  ├─ teacher.model.js
-	 │  ├─ book.model.js
-	 │  ├─ money.model.js
-	 │  └─ stock.model.js
-	 └─ routes/
-			├─ user.route.js
-			└─ teacher.route.js
+   ├─ index.js          # App entry point (Express server)
+   ├─ database/
+   │  └─ db.js          # MongoDB connection
+   ├─ controllers/
+   │  ├─ user.controller.js
+   │  ├─ teacher.controller.js
+   │  ├─ book.controller.js
+   │  ├─ money.controller.js
+   │  └─ stock.controller.js
+   ├─ models/
+   │  ├─ user.model.js
+   │  ├─ teacher.model.js
+   │  ├─ book.model.js
+   │  ├─ money.model.js
+   │  └─ stock.model.js
+   ├─ routes/
+   │  ├─ api.route.js
+   │  ├─ user.route.js
+   │  ├─ teacher.route.js
+   │  ├─ book.route.js
+   │  ├─ money.route.js
+   │  └─ stock.route.js
+   └─ validators/
+      ├─ stock.validator.js
+      ├─ teacher.validator.js
+      └─ user.validator.js
 ```
 
 Main server setup: [src/index.js](src/index.js)
 
-## Getting Started
+## CRUD Example (User Controller)
 
-### Prerequisites
+The user controller demonstrates CRUD with Mongoose and async error handling. See [src/controllers/user.controller.js](src/controllers/user.controller.js).
 
-- Node.js (v18 or higher recommended)
-- npm (comes with Node.js)
+- **Create**: `CreateUser` creates a new document with `new userModel(req.body)` and `save()`
+- **Read**: `getAllUser` returns all users, `getUserById` fetches one by `_id`
+- **Update**: `UpdateUser` updates a user with `updateOne({ _id: userId }, req.body)`
+- **Delete**: `DeleteUser` removes a user with `deleteOne({ _id: id })`
 
-### Install Dependencies
+This controller shows the common CRUD flow for MongoDB-backed routes.
+
+## Controller Filtering (Users)
+
+The user controller includes simple query filtering. You can pass query parameters like `role` or `age` to filter results, for example:
+
+- `GET /api/user?role=admin`
+- `GET /api/user?age=21`
+
+## Step-by-step: Start the Project
+
+### 1) Install Dependencies
 
 ```bash
 npm install
 ```
 
-### Run the Server
+### 2) Start MongoDB (Docker)
 
-Start the Express server directly with Node:
+```bash
+docker run -d -p 27017:27017 --name=mongo-example mongo:latest
+```
+
+### 3) Run the Server
 
 ```bash
 node src/index.js
 ```
 
-Or, using `nodemon` (auto‑restart on file changes):
+Or run in dev mode with auto-restart:
 
 ```bash
 npx nodemon src/index.js
 ```
 
-The server will be available at:
+The API will be at:
 
 ```text
-http://localhost:3000
+http://localhost:3000/api
+```
+
+### 4) Seed Data (Optional)
+
+```bash
+npm run generate
 ```
 
 ## API Reference
@@ -127,74 +151,49 @@ http://localhost:3000/api
 
 ### Users
 
-Resource: `/user`
-
-- `GET /api/user` – Get all users
-- `GET /api/user/:id` – Get a single user by numeric `id`
-- `POST /api/user` – Create a new user
-- `PATCH /api/user/:id` – Update an existing user
-- `DELETE /api/user/:id` – Delete a user by `id`
-
-Sample user object (see [src/models/user.model.js](src/models/user.model.js)):
-
-```json
-{
-	"id": 1,
-	"name": "Alice",
-	"email": "alice@example.com"
-}
-```
-
-Example request body for `POST /api/user`:
-
-```json
-{
-	"id": 4,
-	"name": "David",
-	"email": "david@example.com"
-}
-```
+- `GET /api/user`
+- `GET /api/user/:id`
+- `POST /api/user`
+- `PATCH /api/user/:id`
+- `DELETE /api/user/:id`
 
 ### Teachers
 
-Resource: `/teacher`
+- `GET /api/teacher`
+- `GET /api/teacher/:id`
+- `POST /api/teacher`
+- `PATCH /api/teacher/:id`
+- `DELETE /api/teacher/:id`
 
-- `GET /api/teacher` – Get all teachers
-- `GET /api/teacher/:id` – Get a single teacher by numeric `id`
-- `POST /api/teacher` – Create a new teacher
-- `PATCH /api/teacher/:id` – Update an existing teacher
-- `DELETE /api/teacher/:id` – Delete a teacher by `id`
+### Books
 
-Sample teacher object (see [src/models/teacher.model.js](src/models/teacher.model.js)):
+- `GET /api/book`
+- `GET /api/book/:id`
+- `POST /api/book`
+- `PATCH /api/book/:id`
+- `DELETE /api/book/:id`
 
-```json
-{
-	"id": 1,
-	"name": "Mr. Smith",
-	"subject": "Math",
-	"yearsOfExperience": 10
-}
-```
+### Money
 
-## Data Models
+- `GET /api/money`
+- `GET /api/money/:id`
+- `POST /api/money`
+- `PATCH /api/money/:id`
+- `DELETE /api/money/:id`
 
-In‑memory data is defined in the model files:
+### Stock
 
-- Users: [src/models/user.model.js](src/models/user.model.js)
-- Teachers: [src/models/teacher.model.js](src/models/teacher.model.js)
-- Books: [src/models/book.model.js](src/models/book.model.js)
-- Money: [src/models/money.model.js](src/models/money.model.js)
-- Stock: [src/models/stock.model.js](src/models/stock.model.js)
+- `GET /api/stock`
+- `GET /api/stock/:id`
+- `POST /api/stock`
+- `PATCH /api/stock/:id`
+- `DELETE /api/stock/:id`
 
-Currently, the API routes are wired for **users** and **teachers**. The other models are prepared as sample data sources for future endpoints.
+## Notes
 
-## Notes & Limitations
-
-- This is a learning/demo project: data is stored **in memory** only.
-- No authentication/authorization is implemented.
-- No database; restarting the server resets all changes.
-- Uses ES Modules (`"type": "module"` in [package.json](package.json)).
+- Project uses ES Modules (`"type": "module"` in [package.json](package.json)).
+- MongoDB connection string is defined in [src/database/db.js](src/database/db.js).
 
 ## License
 
-This project is licensed under the **ISC License** (see [package.json](package.json)).
+ISC License. See [package.json](package.json).
