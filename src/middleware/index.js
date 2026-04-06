@@ -39,3 +39,9 @@ export function handleValidation(req,res,next){
 
     res.status(400).send({errors: result.array()});
 }
+
+export function handleError(error,req,res,next){
+    return res.status(500).json({
+        message: error.message
+    });
+}

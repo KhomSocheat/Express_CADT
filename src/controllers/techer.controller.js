@@ -1,41 +1,30 @@
 import teacherModel from "../models/teacher.model.js";
-import asyncHandler from 'express-async-handler'
-export const getAllTeachers = async (req, res) => {
-    try {
-        // Get all teachers with courses populated
-        let filteredTeachers = await teacherModel.find().populate('courses');
+import asyncHandler from 'express-async-handler';
+export const getAllTeachers = asyncHandler(async (req, res) => {
+  // Get all teachers with courses populated
+  let filteredTeachers = await teacherModel.find().populate('courses');
 
-        // Filter by subject if query exists
-        if (req.query.subject) {
-            filteredTeachers = filteredTeachers.filter((t) => t.subject === req.query.subject);
-        }
+  // Filter by subject if query exists
+  if (req.query.subject) {
+    filteredTeachers = filteredTeachers.filter((t) => t.subject === req.query.subject);
+  }
 
-        // Filter by minimum years of experience if query exists
-        if (req.query.minYear) {
-            const minYear = parseInt(req.query.minYear, 10);
-            filteredTeachers = filteredTeachers.filter((t) => t.yearsOfExperience >= minYear);
-        }
+  // Filter by minimum years of experience if query exists
+  if (req.query.minYear) {
+    const minYear = parseInt(req.query.minYear, 10);
+    filteredTeachers = filteredTeachers.filter((t) => t.yearsOfExperience >= minYear);
+  }
 
-        return res.json(filteredTeachers);
-    } catch (err) {
-        return res.status(500).json({ error: err.message });
-    }
-};
+  return res.json(filteredTeachers);
+});
 
-export const getTeacherById = async (req, res) => {
-    try{
-         const id = parseInt(req.params.id);
-         const teacher = await teacherModel(id);
-         return res.json(teacher);
-    }catch(err){
-        return res.status(404).json({message: err})
-    }
-   
-   
-};
+export const getTeacherById = asyncHandler(async (req, res) => {
+     const id = parseInt(req.params.id);
+     const teacher = await teacherModel(id);
+     return res.json(teacher);
+});
 
-export const UpdateTeacher = async (req, res) => {
-  try {
+export const UpdateTeacher = asyncHandler(async (req, res) => {
     const teacherId = req.params.id;
 
     const updateTeacher = await teacherModel.findByIdAndUpdate(
@@ -48,16 +37,8 @@ export const UpdateTeacher = async (req, res) => {
       message: "Teacher update success",
       data: updateTeacher,
     });
-
-  } catch (error) {
-    return res.status(500).json({
-      message: "Error updating teacher",
-      error: error.message,
-    });
-  }
-};
-export const CreateTeacher = async (req, res) => {
-    try {
+});
+export const CreateTeacher = asyncHandler(async (req, res) => {
         const teacher = new teacherModel(req.body);
 
         await teacher.save();
@@ -65,16 +46,9 @@ export const CreateTeacher = async (req, res) => {
           message: "Teacher save success",
           data: teacher,
         });
-    } catch (error) {
-         return res.status(500).json({
-            message: "Error save teacher",
-            error: error.message,
-    });
-    }
-};
+});
 
-export const DeleteTeacher = async (req, res) => {
-  try {
+export const DeleteTeacher = asyncHandler(async (req, res) => {
     const teacherId = req.params.id;
 
     const deletedTeacher = await teacherModel.findByIdAndDelete(teacherId);
@@ -89,11 +63,4 @@ export const DeleteTeacher = async (req, res) => {
       message: `Teacher with id ${teacherId} deleted successfully`,
       data: deletedTeacher,
     });
-
-  } catch (error) {
-    return res.status(500).json({
-      message: "Error deleting teacher",
-      error: error.message,
-    });
-  }
-};
+});
