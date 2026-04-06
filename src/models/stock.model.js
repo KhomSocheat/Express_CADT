@@ -13,7 +13,7 @@ const stockSchema = new mongoose.Schema({
     },
     byUser: {
         type: mongoose.Types.ObjectId,
-        ref: 'User'
+        ref: 'Users'
     }
 },{
     timestamps : true

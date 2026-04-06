@@ -1,5 +1,10 @@
 import stockModel from "../models/stock.model.js";
 import asyncHandler from "express-async-handler";
+
+
+
+
+
 export const CreateStock = asyncHandler(async (req, res) => {
     const stock = new stockModel(req.body);
     await stock.save();
