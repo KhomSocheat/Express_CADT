@@ -1,36 +1,62 @@
 import asyncHandler from "express-async-handler";
 import courseModel from "../models/course.model.js";
+import mongoose from "mongoose";
 
-export const CreateCourse = asyncHandler(async (req, res) => {
-	const course = new courseModel(req.body);
-	await course.save();
-	return res.status(201).json(course);
+export const createCourse = asyncHandler(async (req, res) => {
+    const course = new courseModel(req.body);
+    await course.save();
+    return res.status(201).json(course);
 });
 
-export const getAllCourse = asyncHandler(async (req, res) => {
-	const course = await courseModel.find();
-	return res.json(course);
+export const getCourses = asyncHandler(async (req, res) => {
+    const courses = await courseModel.find();
+    return res.json(courses);
 });
 
 export const getCourseById = asyncHandler(async (req, res) => {
-	const id = req.params.id;
-	const item = await courseModel.findById(id);
-	if (!item) {
-		return res.status(404).json({ message: "Not Found" });
-	}
-	return res.json(item);
+    const id = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        const error = new Error("Invalid ID");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    const course = await courseModel.findById(id);
+
+    if (!course) {
+        const error = new Error("Course not found");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    return res.json(course);
 });
 
-export const UpdateCourse = asyncHandler(async (req, res) => {
-	const courseId = req.params.id;
-	const item = await courseModel.findByIdAndUpdate(courseId, req.body, { new: true });
-	return res.status(200).json({ message: `Course with id ${courseId} updated`, item });
+export const updateCourse = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+
+    const course = await courseModel.findByIdAndUpdate(id, req.body, { new: true });
+
+    if (!course) {
+        const error = new Error("Course not found");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    return res.json(course);
 });
 
+export const deleteCourse = asyncHandler(async (req, res) => {
+    const id = req.params.id;
 
-export const DeleteCourse = asyncHandler(async (req, res) => {
-	const courseId = req.params.id;
-	await courseModel.findByIdAndDelete(courseId);
-	return res.json({ message: `Course with id ${courseId} deleted` });
+    const course = await courseModel.findByIdAndDelete(id);
+
+    if (!course) {
+        const error = new Error("Course not found");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    return res.json({ message: "Course deleted successfully" });
 });
-
