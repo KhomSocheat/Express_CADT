@@ -14,7 +14,7 @@ export const getCourses = asyncHandler(async (req, res) => {
 });
 
 export const getCourseById = asyncHandler(async (req, res) => {
-    const id = req.params.id;
+    const id = req.params.id; //this is req from user 
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         const error = new Error("Invalid ID");

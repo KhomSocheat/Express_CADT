@@ -1,14 +1,16 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2"
 
 const courseSchema = new mongoose.Schema(
   {
-    title: {
+    title: { 
       type: String,
       required: true,
     },
     credit: {
       type: Number,
       required: true,
+
     },
     description: {
       type: String,
@@ -20,6 +22,8 @@ const courseSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+courseSchema.plugin(mongoosePaginate)
 
 const courseModel = mongoose.model("Course", courseSchema);
 

@@ -1,4 +1,4 @@
-import { checkSchema } from "express-validator";
+import { checkSchema, query } from "express-validator";
 import teacherModel from "../models/teacher.model.js";
 
 export const createTeacherValidator = checkSchema({
@@ -41,3 +41,9 @@ export const createTeacherValidator = checkSchema({
     }
 
 });
+
+export const handleQuery = [
+  query("populate")
+    .optional()
+    .isIn(["courses"])
+];

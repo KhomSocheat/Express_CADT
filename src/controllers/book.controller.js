@@ -1,5 +1,4 @@
 import { books } from "../models/book.model.js";
-
 export const getAllBooks = (req, res) => {
 	return res.json(books);
 };
