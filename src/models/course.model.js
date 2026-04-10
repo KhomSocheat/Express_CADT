@@ -16,7 +16,7 @@ const courseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    taughtBy: [{  type: mongoose.Types.ObjectId, ref: "Teachers" }],
+    taughtBy: [{  type: mongoose.Types.ObjectId, ref: "Teacher" }],
   },
   {
     timestamps: true,

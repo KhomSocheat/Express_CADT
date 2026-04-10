@@ -45,3 +45,11 @@ export function handleError(error,req,res,next){
         message: error.message
     });
 }
+
+export function authenticate (req,res,next) {
+    const token = req.headers.authorization.split(' ')[1];
+    if (token != 'fake-token') {
+        return res.status(401).json({message: 'Unauthorized'})
+    }
+    next();
+}

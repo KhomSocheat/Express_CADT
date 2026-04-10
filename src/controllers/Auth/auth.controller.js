@@ -5,5 +5,8 @@ export const login = asyncHandler(async (req,res) =>{
     const password = req.body.password;
 
     //Login logic
+    if(username == 'demo' && password == 'password123'){
+        return res.json({token: 'fake-token'})
+    }
     
 })

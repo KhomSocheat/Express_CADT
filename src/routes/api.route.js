@@ -7,13 +7,14 @@ import StockRouter from "./stock.route.js";
 import CourseRouter from "./course.route.js";
 import AuthRouter from "./auth.route.js";
 const ApiRouter = express.Router();
+import { authenticate } from "../middleware/index.js";
 
-ApiRouter.use("/user", UserRouter);
-ApiRouter.use("/teacher", TeacherRouter);
-ApiRouter.use("/book", BookRouter);
-ApiRouter.use("/money", MoneyRouter);
-ApiRouter.use("/stock", StockRouter);
-ApiRouter.use("/course", CourseRouter);
+ApiRouter.use("/user",authenticate   ,UserRouter);
+ApiRouter.use("/teacher", authenticate, TeacherRouter);
+ApiRouter.use("/book", authenticate, BookRouter);
+ApiRouter.use("/money", authenticate, MoneyRouter);
+ApiRouter.use("/stock", authenticate, StockRouter);
+ApiRouter.use("/course", authenticate, CourseRouter);
 ApiRouter.use("/auth", AuthRouter);
 
 export default ApiRouter;
