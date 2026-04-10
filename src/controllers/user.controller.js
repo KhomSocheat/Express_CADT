@@ -2,18 +2,31 @@ import  userModel from "../models/user.model.js";
 import asyncHandler from "express-async-handler";
 
 export const getAllUser = asyncHandler(async (req, res) => {
-    let filteredUsers = await userModel.find()
-    if(req.query.role){
-        filteredUsers = users.filter((u) => {
-            return u.role === query.role 
-        })
-        
+    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query.page) || 1;
+    const populate = req.query.populate || "";
+    const role = req.query.role;
+    const minAge = req.query.minAge || req.query.age;
+    const query = {};
+
+    if (role) {
+        query.role = role;
     }
-    if(req.query.age){
-        filteredUsers = users.filter((u) => {
-            return u.age >= req.query.age
-        })
+
+    if (minAge) {
+        query.age = {
+            $gte: Number(minAge),
+        };
     }
+
+    const options = {
+        page,
+        limit,
+        populate,
+    };
+
+    const filteredUsers = await userModel.paginate(query, options);
+
     return res.json(filteredUsers);
 });
 

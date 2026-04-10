@@ -7,7 +7,7 @@ export const getAllTeachers = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const page = parseInt(req.query.page) || 1;
   const populate = req.query.populate || ''
-  const minYear = req.query.minYear;
+  const minYear = parseInt(req.query.minYear) || 0;
   const options = {
     page, 
     limit,
@@ -15,7 +15,7 @@ export const getAllTeachers = asyncHandler(async (req, res) => {
   };
   let filteredTeachers = await teacherModel.paginate({
     yearsOfExperience: {
-        $gate : minYear
+        $gte : minYear
     }
   },options);
 

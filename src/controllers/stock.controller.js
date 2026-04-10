@@ -14,21 +14,34 @@ export const CreateStock = asyncHandler(async (req, res) => {
 
 
 export const getAllStock = asyncHandler(async (req, res) => {
-	let filteredStock = await stockModel.find();
+	const limit = parseInt(req.query.limit) || 10;
+	const page = parseInt(req.query.page) || 1;
+	const populate = req.query.populate || "";
+	const minQuantity = req.query.minQuantity;
+	const maxQuantity = req.query.maxQuantity;
+	const query = {};
 
-	if (req.query.maxQuantity) {
-		filteredStock = filteredStock.filter((s) => {
-			return s.quantity <= Number(req.query.maxQuantity);
-		});
+	if (minQuantity || maxQuantity) {
+		query.quantity = {};
 	}
 
-	if (req.query.minQuantity) {
-		filteredStock = filteredStock.filter((s) => {
-			return s.quantity >= Number(req.query.minQuantity);
-		});
+	if (minQuantity) {
+		query.quantity.$gte = Number(minQuantity);
 	}
 
-		return res.json(filteredStock);
+	if (maxQuantity) {
+		query.quantity.$lte = Number(maxQuantity);
+	}
+
+	const options = {
+		page,
+		limit,
+		populate,
+	};
+
+	const filteredStock = await stockModel.paginate(query, options);
+
+	return res.json(filteredStock);
 });
 
 export const getStockById = asyncHandler(async (req, res) => {

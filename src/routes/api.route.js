@@ -5,7 +5,7 @@ import BookRouter from "./book.route.js";
 import MoneyRouter from "./money.route.js";
 import StockRouter from "./stock.route.js";
 import CourseRouter from "./course.route.js";
-
+import AuthRouter from "./auth.route.js";
 const ApiRouter = express.Router();
 
 ApiRouter.use("/user", UserRouter);
@@ -14,5 +14,6 @@ ApiRouter.use("/book", BookRouter);
 ApiRouter.use("/money", MoneyRouter);
 ApiRouter.use("/stock", StockRouter);
 ApiRouter.use("/course", CourseRouter);
+ApiRouter.use("/auth", AuthRouter);
 
 export default ApiRouter;

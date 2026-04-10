@@ -9,7 +9,18 @@ export const createCourse = asyncHandler(async (req, res) => {
 });
 
 export const getCourses = asyncHandler(async (req, res) => {
-    const courses = await courseModel.find();
+    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query.page) || 1;
+    const populate = req.query.populate || "";
+
+    const options = {
+        page,
+        limit,
+        populate,
+    };
+
+    const courses = await courseModel.paginate({}, options);
+
     return res.json(courses);
 });
 
