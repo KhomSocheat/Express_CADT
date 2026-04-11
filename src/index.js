@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import ApiRouter from './routes/api.route.js';
 import { dbConnect } from './database/db.js';

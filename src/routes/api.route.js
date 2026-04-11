@@ -6,10 +6,10 @@ import MoneyRouter from "./money.route.js";
 import StockRouter from "./stock.route.js";
 import CourseRouter from "./course.route.js";
 import AuthRouter from "./auth.route.js";
-const ApiRouter = express.Router();
 import { authenticate } from "../middleware/index.js";
+const ApiRouter = express.Router();
 
-ApiRouter.use("/user",authenticate   ,UserRouter);
+ApiRouter.use("/user" ,authenticate ,UserRouter);
 ApiRouter.use("/teacher", authenticate, TeacherRouter);
 ApiRouter.use("/book", authenticate, BookRouter);
 ApiRouter.use("/money", authenticate, MoneyRouter);

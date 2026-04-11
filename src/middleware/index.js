@@ -1,4 +1,6 @@
 import { validationResult } from "express-validator";
+import jwt from 'jsonwebtoken'
+import asyncHandler from 'express-async-handler'
 export function teacherMiddleware(req, res, next) {
     if(req.query.minYear){
         const minYear = parseInt(req.query.minYear);
@@ -46,10 +48,16 @@ export function handleError(error,req,res,next){
     });
 }
 
-export function authenticate (req,res,next) {
-    const token = req.headers.authorization.split(' ')[1];
-    if (token != 'fake-token') {
-        return res.status(401).json({message: 'Unauthorized'})
+export const authenticate = asyncHandler(async(req,res,next) => {
+    if(!req.headers.authorization){
+        return res.status(404).json({message: "No Token Provided"});
+
     }
+    const token = req.headers.authorization.split(" ")[1]
+    const payload = jwt.verify(token,process.env.JWT_SECRET)
+    const user = await userModel.findById(
+        payload._id
+    )
+    req.user = user 
     next();
-}
+})
