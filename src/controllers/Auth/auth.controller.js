@@ -2,46 +2,75 @@ import asyncHandler from 'express-async-handler'
 import bcrypt from "bcrypt";
 import userModel from '../../models/user.model.js';
 import jwt from 'jsonwebtoken'
-export const login = asyncHandler(async (req,res) =>{
-    const {username,password} = req.body; // get uername and pw from request body 
 
-    //validation if user not type anything 
+// ====================== LOGIN ======================
+export const login = asyncHandler(async (req, res) => {
+
+    // Get username and password from request body
+    const { username, password } = req.body;
+
+    // Validate: check if user did not input username or password
     if (!username || !password) {
         return res.status(400).json({ message: "Username and password are required" });
     }
 
-    const user = await userModel.findOne({username: username}) //check user have in database or not 
-    if(!user){ // if not return message not found 
-       return res.status(404).json({ message: "User not found" });
+    // Find user in database by username
+    const user = await userModel.findOne({ username: username });
+
+    // If user not found → return error
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
     }
-    const isMatch = await bcrypt.compare(password,user.password) //compare password from user request body with pw that have in database 
-    if(!isMatch){
-        return res.json({message: "Username or Password Incorrect"})
+
+    // Compare entered password with hashed password in database
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    // If password does not match → return error
+    if (!isMatch) {
+       return res.status(401).json({ message: "Username or Password Incorrect" });
     }
-    //Login logic
+
+    // ================= JWT TOKEN =================
+
+    // Create payload (data inside token)
     const payload = {
         _id: user._id,
-        username : user.username,
+        username: user.username,
         role: user.role
-    }
-    const token = jwt.sign(payload, process.env.JWT_SECRET,{
+    };
+
+    // Generate JWT token
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN
-    })
+    });
 
-    return res.json({accessToken : token})
-    
-})
+    // Send token + user data to frontend
+    return res.json({
+        accessToken: token,
+        user
+    });
 
-export const register = asyncHandler(async (req,res) =>{
-    const {name, username, age, email, role, password} = req.body; // get from request body
-    
-    const existingUser = await userModel.findOne({ email }) // check user for not duplicate from database 
-    if(existingUser){
+});
+
+
+// ====================== REGISTER ======================
+export const register = asyncHandler(async (req, res) => {
+
+    // Get user data from request body
+    const { name, username, age, email, role, password } = req.body;
+
+    // Check if email already exists in database
+    const existingUser = await userModel.findOne({ email });
+
+    // If email exists → return error
+    if (existingUser) {
         return res.status(400).json({ message: "Email already exists" });
     }
-    
-    const encryptPassword = await bcrypt.hash(password,10) //Hash password before submit to database 
 
+    // Hash password before saving to database
+    const encryptPassword = await bcrypt.hash(password, 10);
+
+    // Create new user object
     const user = new userModel({
         name,
         username,
@@ -49,8 +78,11 @@ export const register = asyncHandler(async (req,res) =>{
         role,
         email,
         password: encryptPassword
-    })
+    });
+
+    // Save user to database
     await user.save();
 
-    return res.json(user)
-})
+    // Return created user data
+    return res.json(user);
+});

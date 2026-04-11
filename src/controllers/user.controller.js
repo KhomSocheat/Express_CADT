@@ -31,8 +31,8 @@ export const getAllUser = asyncHandler(async (req, res) => {
 });
 
 export const getUserById = asyncHandler(async (req, res) => {
-  const id = parseInt(req.params.id);
-  const user = await userModel.findById(id);
+    const id = req.params.id
+    const user = await userModel.findById(id)
     if(!user){
         return res.status(404).json({message: "Not Found"});
     }

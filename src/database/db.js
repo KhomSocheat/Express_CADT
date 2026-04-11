@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 
 const dbName = "idg-03";
-const dbUrl = `mongodb://localhost:27017/${dbName}`;
+const dbUrl = `mongodb://cadt-db:27017/${dbName}`;
 
 export async function dbConnect(){
 

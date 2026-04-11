@@ -1,6 +1,7 @@
 import { validationResult } from "express-validator";
 import jwt from 'jsonwebtoken'
 import asyncHandler from 'express-async-handler'
+import userModel from '../models/user.model.js'
 export function teacherMiddleware(req, res, next) {
     if(req.query.minYear){
         const minYear = parseInt(req.query.minYear);
