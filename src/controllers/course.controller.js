@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import courseModel from "../models/course.model.js";
 import mongoose from "mongoose";
-
+import redisClient from "../redis/index.js";
 export const createCourse = asyncHandler(async (req, res) => {
     const course = new courseModel(req.body);
     await course.save();
@@ -9,6 +9,12 @@ export const createCourse = asyncHandler(async (req, res) => {
 });
 
 export const getCourses = asyncHandler(async (req, res) => {
+    // const courseCacheKey = 'courses';
+    // const cacheCourses = await redisClient.get(courseCacheKey);
+
+    // if(cacheCourses){
+    //     return res.json(JSON.parse(cacheCourses));
+    // }
     const limit = parseInt(req.query.limit) || 10;
     const page = parseInt(req.query.page) || 1;
     const populate = req.query.populate || "";
@@ -21,7 +27,11 @@ export const getCourses = asyncHandler(async (req, res) => {
 
     const courses = await courseModel.paginate({}, options);
 
-    return res.json(courses);
+    // await redisClient.set(courseCacheKey,JSON.stringify(courses), {
+    //     EX: 60 
+    // });
+
+    return res.status(200).json(courses);
 });
 
 export const getCourseById = asyncHandler(async (req, res) => {

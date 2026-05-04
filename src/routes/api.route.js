@@ -6,15 +6,31 @@ import MoneyRouter from "./money.route.js";
 import StockRouter from "./stock.route.js";
 import CourseRouter from "./course.route.js";
 import AuthRouter from "./auth.route.js";
-import { authenticate } from "../middleware/index.js";
+import { authenticate,CacheInterceptor,cacheMiddleware,invalidateCache } from "../middleware/index.js";
+import rateLimit from 'express-rate-limit';
+import RedisStore from 'rate-limit-redis';
+
+const limiter = (ttl,request) => rateLimit({
+    windowMs: ttl,
+    max: request,
+    statusCode: 429,
+    message: { message: "Too many requests, please try again later." },
+    store : new RedisStore({
+        sendCommand: (...args) => redisClient.sendCommand(...args)
+    })
+})
+
+const authLimiter = limiter(60 * 60 * 1000 ,20);
+const generalLimiter = limiter(60 * 1000 ,30);
+
 const ApiRouter = express.Router();
 
-ApiRouter.use("/user" ,authenticate ,UserRouter);
-ApiRouter.use("/teacher", authenticate, TeacherRouter);
-ApiRouter.use("/book", authenticate, BookRouter);
-ApiRouter.use("/money", authenticate, MoneyRouter);
-ApiRouter.use("/stock", authenticate, StockRouter);
-ApiRouter.use("/course", authenticate, CourseRouter);
-ApiRouter.use("/auth", AuthRouter);
+ApiRouter.use("/user" ,generalLimiter, authenticate ,cacheMiddleware,CacheInterceptor(60 * 10),invalidateCache ,UserRouter);
+ApiRouter.use("/teacher",generalLimiter, authenticate, cacheMiddleware, CacheInterceptor(60 * 10), invalidateCache, TeacherRouter);
+ApiRouter.use("/book",generalLimiter, authenticate, cacheMiddleware, CacheInterceptor(60 * 10), invalidateCache, BookRouter);
+ApiRouter.use("/money",generalLimiter, authenticate, cacheMiddleware, CacheInterceptor(60 * 10), invalidateCache, MoneyRouter);
+ApiRouter.use("/stock",generalLimiter, authenticate, cacheMiddleware, CacheInterceptor(60 * 10), invalidateCache, StockRouter);
+ApiRouter.use("/course",generalLimiter, authenticate, cacheMiddleware, CacheInterceptor(60 * 10), invalidateCache, CourseRouter);
+ApiRouter.use("/auth",authLimiter, AuthRouter);
 
-export default ApiRouter;
+export {ApiRouter   ,generalLimiter,authLimiter};
