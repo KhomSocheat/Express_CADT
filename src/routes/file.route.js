@@ -6,5 +6,5 @@ const FileRouter = express.Router();
 
 FileRouter.post("/upload", upload, FileController.uploadSingleFile);
 FileRouter.post("/uploads", uploads, FileController.uploadMultipleFiles);
-
+FileRouter.get("/:id", FileController.getFileById);
 export default FileRouter;

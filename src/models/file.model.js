@@ -27,6 +27,11 @@ const fileSchema = new mongoose.Schema(
         type: String,
         required: true,
     },
+    bucket:{
+        type: String,
+        required: true,
+    },
+
   },{
     timestamps: true,
   }

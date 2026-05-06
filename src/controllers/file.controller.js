@@ -16,3 +16,14 @@ export const uploadMultipleFiles = async (req,res) =>{
     await fileModel.insertMany(newFiles);
     res.json(files);
 }
+
+export const getFileById = async (req,res) =>{
+    const fileId = req.params.id;
+    const file = await fileModel.findById(fileId);
+    const fileStream = await minioClient.getObject(file.bucket, file.filename);
+   res.set({
+        'Content-Type': file.mimetype,
+        'Content-Disposition': `attachment; filename="${file.originalName}"`
+   });
+    return fileStream.pipe(res);
+}
