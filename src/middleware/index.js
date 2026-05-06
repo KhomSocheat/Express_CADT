@@ -52,20 +52,45 @@ export function handleError(error,req,res,next){
     });
 }
 
+// Middleware to protect routes (check JWT token)
 export const authenticate = asyncHandler(async (req, res, next) => {
+
+    // 1. Check if Authorization header exists
     if (!req.headers.authorization) {
+        // If no token → reject request
         return res.status(401).json({ message: "No Token Provided" });
     }
+
+    // 2. Extract token from header
+    // Format: "Bearer <token>"
     const token = req.headers.authorization.split(" ")[1];
+
     try {
+        // 3. Verify token using secret key
+        // If valid → get payload (user data inside token)
         const payload = jwt.verify(token, process.env.JWT_SECRET);
+
+        // 4. Find user in database using ID from token
         const user = await userModel.findById(payload._id);
+
+        if(!user){
+            return res.status(404).json({ message: "User not found" });
+        }
+        // 5. Attach user data to request object
+        // So we can use it in next middleware/controller
         req.user = user;
+
+        // 6. Allow request to continue
         next();
+
     } catch (err) {
+
+        // 7. If token is expired
         if (err.name === "TokenExpiredError") {
             return res.status(401).json({ message: "Token expired" });
         }
+
+        // 8. If token is invalid
         return res.status(401).json({ message: "Invalid token" });
     }
 });
