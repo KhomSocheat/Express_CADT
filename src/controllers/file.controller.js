@@ -27,3 +27,14 @@ export const getFileById = async (req,res) =>{
    });
     return fileStream.pipe(res);
 }
+
+export const deleteFileById = async (req,res) =>{
+    const fileId = req.params.id;
+    const file = await fileModel.findById(fileId);
+
+    await minioClient.removeObject(file.bucket,file.filename);
+    await fileModel.findByIdAndDelete(fileId);
+    res.json({message: "File deleted successfully"});
+
+    
+}
