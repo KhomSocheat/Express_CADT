@@ -26,8 +26,20 @@ services:
       - ./src:/app/src
       - ./.env:/app/.env
     scale: 5 # auto scale up to 5 instances server load
-    depends_on:
-      - cadt-db
+
+  file_server: # MinIO server for file storage
+    image: minio/minio
+    container_name: file_server
+    ports:
+      - "9000:9000"
+      - "9001:9001"  
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
+    
   cadt-db:
     image: mongo:8.0.12-noble
     container_name: cadt-db
@@ -42,3 +54,4 @@ services:
       - "6379:6379"
 volumes:
   cadt-db-data:
+  minio-data:

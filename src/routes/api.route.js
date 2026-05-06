@@ -32,5 +32,6 @@ ApiRouter.use("/money",generalLimiter, authenticate, cacheMiddleware, CacheInter
 ApiRouter.use("/stock",generalLimiter, authenticate, cacheMiddleware, CacheInterceptor(60 * 10), invalidateCache, StockRouter);
 ApiRouter.use("/course",generalLimiter, authenticate, cacheMiddleware, CacheInterceptor(60 * 10), invalidateCache, CourseRouter);
 ApiRouter.use("/auth",authLimiter, AuthRouter);
+ApiRouter.use("/file",FileRouter);
 
 export {ApiRouter   ,generalLimiter,authLimiter};
