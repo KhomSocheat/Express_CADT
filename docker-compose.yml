@@ -25,7 +25,7 @@ services:
     volumes:
       - ./src:/app/src
       - ./.env:/app/.env
-    scale: 5 # auto scale up to 5 instances server load
+    scale: 1 # auto scale up to 5 instances server load
 
   file_server: # MinIO server for file storage
     image: minio/minio
