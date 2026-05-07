@@ -5,7 +5,7 @@ import { dbConnect } from './database/db.js'; //database connection function
 import { handleError } from './middleware/index.js'; //error handling middleware
 import morgan from 'morgan' // HTTP request logger middleware
 import cors from 'cors' // Cross-Origin Resource Sharing middleware
-import redisClient,{connectRedis} from "./redis/index.js"; // Redis client and connection function
+import redisClient from "./redis/index.js"; // Redis client and connection function
 
 
 const app = express();
@@ -17,13 +17,19 @@ app.use(morgan('combined'))
 app.use('/api', ApiRouter); //call api router that we combine all routes in api.route.js
 app.use(handleError); 
 
+app.get('/', (req, res) => {
+    res.status(200).send('Hello World!');
+});
+
+
 const startServer = async () => {
   try {
     await dbConnect();
     console.log("MongoDB connected");
 
-    await connectRedis();
-    console.log("Redis connected");
+    
+    // await redisClient.connect();
+    // console.log("Redis connected");
 
     app.listen(3000, () => {
       console.log("Server running on port 3000");

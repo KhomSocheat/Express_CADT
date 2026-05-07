@@ -1,18 +1,19 @@
 import multer from "multer";
 import {Client} from 'minio';
 import {MinioStorageEngine} from '@namatery/multer-minio';
-import { use } from "react";
 
 
 export const minioClient = new Client({
     port: 9000,
-    endPoint: file_server,
+    endPoint: "minio",
     accessKey: process.env.MINIO_ROOT_USER,
     secretKey: process.env.MINIO_ROOT_PASSWORD,
     useSSL: false,
+    pathStyle: true
+   
 });
 export const options = {
-    path: '/',
+
     region: 'us-east-1',
     bucket: {
         init: true,

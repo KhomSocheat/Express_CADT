@@ -1,5 +1,5 @@
 import fileModel from "../models/file.model.js";
-
+import { minioClient } from "../middleware/multer.js"; 
 export const uploadSingleFile = async (req,res) =>{
      const file = req.file;
 

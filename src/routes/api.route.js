@@ -6,17 +6,18 @@ import MoneyRouter from "./money.route.js";
 import StockRouter from "./stock.route.js";
 import CourseRouter from "./course.route.js";
 import AuthRouter from "./auth.route.js";
+import FileRouter from "./file.route.js";
 import { authenticate,CacheInterceptor,cacheMiddleware,invalidateCache } from "../middleware/index.js";
 import rateLimit from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
-
+import redisClient from "../redis/index.js";
 const limiter = (ttl,request) => rateLimit({
     windowMs: ttl,
     max: request,
     statusCode: 429,
     message: { message: "Too many requests, please try again later." },
     store : new RedisStore({
-        sendCommand: (...args) => redisClient.sendCommand(...args)
+        sendCommand: (...args) => redisClient.sendCommand(args)
     })
 })
 

@@ -8,10 +8,7 @@ services:
       
     environment:
       - EXPRESS_HOST_1=idg-03-cadt-express-1 
-      - EXPRESS_HOST_2=idg-03-cadt-express-2
-      - EXPRESS_HOST_3=idg-03-cadt-express-3
-      - EXPRESS_HOST_4=idg-03-cadt-express-4
-      - EXPRESS_HOST_5=idg-03-cadt-express-5
+     
       - EXPRESS_PORT=3000
       - NGINX_SERVER_NAME=localhost
       - NGINX_MAX_BODY=100M
@@ -21,7 +18,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-   
+    depends_on:
+      - cadt-db
+      - cadt-redis-cache
     volumes:
       - ./src:/app/src
       - ./.env:/app/.env
@@ -29,7 +28,7 @@ services:
 
   file_server: # MinIO server for file storage
     image: minio/minio
-    container_name: file_server
+    container_name: minio
     ports:
       - "9000:9000"
       - "9001:9001"  
